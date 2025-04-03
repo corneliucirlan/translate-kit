@@ -28,8 +28,8 @@ This script processes `.srt` files located in a specified input directory. It re
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repository-url>
-    cd <repository-name>
+    git clone https://github.com/corneliucirlan/translate-kit.git
+    cd translate-kit
     ```
 
 2.  **Install dependencies:**
@@ -62,7 +62,52 @@ This script processes `.srt` files located in a specified input directory. It re
 
 ## Usage
 
-Run the script from your terminal using `python translate_srt.py` (or whatever you name the main Python file). Use the command-line arguments to configure its behavior.
+Run the script from your terminal using `python translate.py`. Use the command-line arguments to configure its behavior.
 
-```bash
-python translate_srt.py [OPTIONS]
+  ```bash
+  python translate.py [OPTIONS]
+
+
+## Options
+
+## `--input DIRECTORY` or `-i DIRECTORY`
+Specifies the directory containing the source `.srt` subtitle files you want to translate.
+
+- **Default:** `.` (The directory where you are currently running the script).
+- **Example:**  
+  ```bash
+  python translate.py -i ./path/to/your/subtitles
+
+## `--output DIRECTORY` or `-o DIRECTORY`
+Specifies the directory where the translated .srt files will be saved. The script will attempt to create this directory if it doe not exist.
+
+- **Default:** output (A folder named "output" will be created in the current directory).
+- **Example:**
+  ```bash
+  python translate.py -o ./translated_subtitles
+
+## `--source-language LANGUAGE` or `-sl LANGUAG`
+Defines the original language of the subtitles in the input files (e.g., "English", "Spanish", "French"). This information is passed to the translation model.
+
+- **Default:** `English`
+- **Example:**
+  ```bash
+  python translate.py -sl German
+
+## `--target-language LANGUAGE` or `-tl LANGUAGE`
+Defines the language you want the subtitles translated into (e.g., "Romanian", "Japanese", "Italian").
+
+- **Default:** `Romanian`
+- **Example:**  
+  ```bash
+  python translate.py -tl "Brazilian Portuguese"
+
+## `--model MODEL_NAME` or `-m MODEL_NAME`
+Specifies the OpenAI model to use for the translation task. Different models may offer varying translation quality, speed, and cost.
+
+- **Default:** `gpt-4o-mini`
+- **Example:**  
+  ```bash
+  python translate.py -m gpt-4
+  python translate.py -m gpt-3.5-turbo
+(Consult the OpenAI documentation for currently available and suitable chat completion models.)
