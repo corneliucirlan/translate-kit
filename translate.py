@@ -139,7 +139,7 @@ async def process_srt_file(input_srt_file, output_dir, source_language, target_l
     chunks = chunk_subtitles_as_text(subtitles, 50)
     logging.info(f"Subtitle count: {len(subtitles)}, Chunks: {len(chunks)}")
 
-    output_file_name = os.path.splitext(os.path.basename(input_srt_file))[0] + "_ro.srt"
+    output_file_name = os.path.splitext(os.path.basename(input_srt_file))[0] + "_out.srt"
     output_file_path = os.path.join(output_dir, output_file_name)
 
     translated_chunks = []
