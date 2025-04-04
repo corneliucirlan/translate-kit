@@ -4,6 +4,7 @@ import asyncio
 import argparse
 import logging
 from openai import OpenAI, OpenAIError
+from common.parse import parse_srt
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -15,48 +16,6 @@ except OpenAIError as e:
     logging.error(f"Failed to initialize OpenAI client: {e}")
     # Consider exiting or handling this appropriately
     client = None # Prevent further errors if initialization failed
-
-class Subtitle:
-    def __init__(self, id_line, timestamps, text):
-        # Store id_line as string to preserve original formatting if needed
-        self.id_line = id_line
-        self.timestamps = timestamps
-        self.text = text
-
-    def __str__(self):
-        # Reconstruct the standard SRT block format
-        return f"{self.id_line}\n{self.timestamps}\n{self.text}"
-
-def parse_srt(srt_file_path):
-    """Parses an SRT file and returns a list of Subtitle objects."""
-    subtitles = []
-    try:
-        with open(srt_file_path, 'r', encoding='utf-8') as f:
-            srt_content = f.read()
-    except FileNotFoundError:
-        logging.error(f"File not found: {srt_file_path}")
-        return []
-    except Exception as e:
-        logging.error(f"Error reading file {srt_file_path}: {e}")
-        return []
-
-    # Use a more robust regex to handle different line endings and spacing
-    subtitle_blocks = re.split(r'\n\s*\n', srt_content.strip())
-
-    for block in subtitle_blocks:
-        lines = block.strip().split('\n')
-        if len(lines) >= 3:
-            id_line = lines[0].strip()
-            timestamps = lines[1].strip()
-            text = '\n'.join(lines[2:]).strip()
-            # Basic validation for ID and timestamp format (optional but good)
-            if id_line.isdigit() and '-->' in timestamps:
-                 subtitles.append(Subtitle(id_line, timestamps, text))
-            else:
-                 logging.warning(f"Skipping invalid subtitle block fragment in {srt_file_path}: ID='{id_line}', Timestamp='{timestamps}'")
-        elif block.strip(): # Avoid warnings for empty blocks resulting from split
-            logging.warning(f"Skipping incomplete subtitle block in {srt_file_path}: {block}")
-    return subtitles
 
 def chunk_subtitles_as_text(subtitles, chunk_size=50):
     """
