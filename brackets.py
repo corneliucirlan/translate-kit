@@ -1,3 +1,4 @@
+import argparse
 import re
 import sys
 import os
@@ -28,23 +29,21 @@ def write_srt(subtitles, output_file_path):
         print(f"An error occurred while writing to '{os.path.basename(output_file_path)}': {e}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python script_name.py <input_folder_path> <output_folder_path>")
-        sys.exit(1)
-
-    input_folder = sys.argv[1]
-    output_folder = sys.argv[2]
+    parser = argparse.ArgumentParser(description="Remove lines that are wrapped in brackets")
+    parser.add_argument("--input", "-i", type=str, default=".", help="Input directory containing the SRT files")
+    parser.add_argument("--output", "-o", type=str, default="output", help="Output directory for the processed SRT files")
+    args = parser.parse_args()
 
     # Create the output folder if it doesn't exist
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-        print(f"Created output folder: {output_folder}")
+    if not os.path.exists(args.output):
+        os.makedirs(args.output)
+        print(f"Created output folder: {args.output}")
 
     # Iterate through all files in the input folder
-    for filename in os.listdir(input_folder):
-        if filename.endswith(".srt") and os.path.isfile(os.path.join(input_folder, filename)):
-            input_file_path = os.path.join(input_folder, filename)
-            output_file_path = os.path.join(output_folder, filename)
+    for filename in os.listdir(args.input):
+        if filename.endswith(".srt") and os.path.isfile(os.path.join(args.input, filename)):
+            input_file_path = os.path.join(args.input, filename)
+            output_file_path = os.path.join(args.output, filename)
 
             # Parse the SRT file into a list of Subtitle objects
             subtitles = parse_srt(input_file_path)

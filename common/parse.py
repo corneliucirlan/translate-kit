@@ -1,7 +1,7 @@
 import re
 import logging
 
-from lib.subtitle import Subtitle
+from common.subtitle import Subtitle
 
 def parse_srt(srt_file_path):
     """Parses an SRT file and returns a list of Subtitle objects."""
