@@ -9,8 +9,12 @@ from common.parse import parse_srt
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def remove_bracketed_and_parenthesized_text_from_subtitle(subtitle):
-    """Removes text within square brackets and parentheses from a Subtitle object's text."""
-    subtitle.text = re.sub(r'\[.*?\]|\(.*?\)', '', subtitle.text).strip()
+    """Removes text within square brackets, parentheses, and musical notes from a Subtitle object's text."""
+    # Remove text within brackets and parentheses
+    cleaned_text = re.sub(r'\[.*?\]|\(.*?\)', '', subtitle.text)
+    # Remove musical notes
+    cleaned_text = re.sub(r'♪+', '', cleaned_text)
+    subtitle.text = cleaned_text.strip()
     return subtitle
 
 def write_srt(subtitles, output_file_path):
@@ -28,7 +32,7 @@ def write_srt(subtitles, output_file_path):
         print(f"An error occurred while writing to '{os.path.basename(output_file_path)}': {e}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Remove lines that are wrapped in brackets")
+    parser = argparse.ArgumentParser(description="Remove lines that are wrapped in brackets or contain musical notes")
     parser.add_argument("--input", "-i", type=str, default=".", help="Input directory containing the SRT files")
     parser.add_argument("--output", "-o", type=str, default="output", help="Output directory for the processed SRT files")
     args = parser.parse_args()
